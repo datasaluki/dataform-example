@@ -1,0 +1,28 @@
+config {
+    type: "incremental",
+    description: "The order item fact table.",
+    tags: ["fact", "order"],
+    uniqueKey: ["order_item_id"],
+    bigquery: {
+      partitionBy: "date(placed_at)",
+      clusterBy: ["customer_id"]
+    }
+}
+
+js {
+    const {
+        surrogate_key
+    } = require("includes/helper.js")
+}
+
+SELECT
+  ${surrogate_key(["order_item_id"])} order_item_id,
+  order_id,
+  ${surrogate_key(["customer_id"])} customer_id,
+  ${surrogate_key(["product_id"])} product_id,
+  ${surrogate_key(["shipping_method_id", "courier_id"])} shipping_method_id,
+  oi.quantity,
+  oi.placed_timestamp placed_at,
+  oi.shipped_timestamp shipped_at
+FROM
+  ${ref(dataform.projectConfig.defaultSchema, "stg_order_item")} oi
