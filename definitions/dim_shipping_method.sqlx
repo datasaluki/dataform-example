@@ -7,6 +7,10 @@ config {
         shipping_method_id: "The unqiue id of the shipping method (hash of the source system shipping_method_id and courier_id)",
         shipping_method: "The name of the shippping method",
         courier: "The name of the courier used for shipping"
+    },
+    assertions: {
+      uniqueKey: ["shipping_method_id"],
+      nonNull: ["shipping_method", "courier"]
     }
 }
 

@@ -8,6 +8,10 @@ config {
       category: "The category the product belongs to",
       sub_category: "The sub-category the product belongs to",
       price: "The product's price"
+    },
+    assertions: {
+        uniqueKey: ["product_id"],
+        nonNull: ["product_id", "product_name", "category", "sub_category", "price"]
     }
 }
 

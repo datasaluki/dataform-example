@@ -6,6 +6,10 @@ config {
     bigquery: {
       partitionBy: "date(placed_at)",
       clusterBy: ["customer_id"]
+    },
+    assertions: {
+        uniqueKey: ["order_item_id"],
+        nonNull: ["order_item_id", "customer_id", "product_id", "shipping_method_id", "quantity", "placed_at"]
     }
 }
 
