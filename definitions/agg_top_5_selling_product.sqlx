@@ -1,0 +1,24 @@
+config {
+    type: "table",
+    description: "The top 5 products based on total value sold (quantity * price)",
+    tags: ["aggregate", "product", "order"],
+    columns: {
+        product_id: "The unique identifier of the product",
+        product_name: "The name of the product",
+        num_order: "The total number of orders for the product",
+        total_quantity: "The total quantity of the product ordered",
+        total_value: "The total value (quantity * price) of the product sold"
+    }
+}
+
+select 
+    dp.product_id,
+    dp.product_name,
+    count(distinct f.order_id) num_order,
+    sum(f.quantity) total_quantity,
+    sum(dp.price * f.quantity) total_value
+from ${ref(dataform.projectConfig.defaultSchema, "fct_order_item")} f
+inner join ${ref(dataform.projectConfig.defaultSchema, "dim_product")} dp on dp.product_id = f.product_id
+group by dp.product_id, dp.product_name
+order by total_value desc
+limit 5

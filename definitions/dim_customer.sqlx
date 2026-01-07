@@ -1,0 +1,25 @@
+config {
+    type: "table",
+    description: "The customer dimension table",
+    tags: ["dimension", "customer"],
+    columns: {
+        customer_id: "The unique ID for the customer (hashed)",
+        city: "The city the customer lives in",
+        country: "The country the customer lives in",
+        src_customer_id: "The source systems unique ID for the customer"
+    }
+}
+
+js {
+    const {
+        surrogate_key
+    } = require("includes/helper.js");
+}
+
+SELECT
+  ${surrogate_key(["id"])} customer_id,
+  city,
+  country,
+  id src_customer_id
+FROM
+  ${ref(dataform.projectConfig.vars.sourceSchema, "customer")}

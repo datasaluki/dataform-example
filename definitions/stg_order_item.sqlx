@@ -1,0 +1,20 @@
+config {
+    type: "view",
+    description: "Staging view used to select source data to be included for either full or incremental loads. Uses resolve to perform watermarking based on fct_order_item",
+    tags:["staging", "order"]
+}
+
+SELECT
+  oi.id order_item_id,
+  oi.order_id,
+  o.customer_id,
+  oi.product_id,
+  o.shipping_method_id,
+  o.courier_id,
+  oi.quantity,
+  o.placed_timestamp,
+  o.shipped_timestamp
+FROM
+  ${ref(dataform.projectConfig.vars.sourceSchema, "order_item")} oi
+inner join  ${ref(dataform.projectConfig.vars.sourceSchema, "order")} o on o.id = oi.order_id 
+${when(incremental(), `where placed_timestamp > (select max(placed_timestamp) from ${resolve(dataform.projectConfig.defaultSchema, 'fct_order_item')}) or shipped_timestamp > (select max(shipped_timestamp) from ${resolve(dataform.projectConfig.defaultSchema, 'fct_order_item')})`, '')}

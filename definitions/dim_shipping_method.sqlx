@@ -1,0 +1,39 @@
+config {
+    type: "incremental",
+    description: "Dimension table combining couriers and shipping method combinations",
+    tags:["dimension", "shipping"],
+    uniqueKey: ["shipping_method_id"],
+    columns: {
+        shipping_method_id: "The unqiue id of the shipping method (hash of the source system shipping_method_id and courier_id)",
+        shipping_method: "The name of the shippping method",
+        courier: "The name of the courier used for shipping"
+    }
+}
+
+js {
+    const {
+        surrogate_key
+    } = require("includes/helper.js")
+}
+
+WITH
+  distinct_ids AS (
+  SELECT
+    DISTINCT shipping_method_id,
+    courier_id
+  FROM
+    ${ref(dataform.projectConfig.defaultSchema, "stg_order_item")} )
+SELECT
+  ${surrogate_key(["di.shipping_method_id", "di.courier_id"])} shipping_method_id,
+  sm.name shipping_method,
+  c.name courier
+FROM
+  distinct_ids di
+INNER JOIN
+  ${ref(dataform.projectConfig.vars.sourceSchema, "courier")} c
+ON
+  c.id = di.courier_id
+INNER JOIN
+  ${ref(dataform.projectConfig.vars.sourceSchema, "shipping_method")} sm
+ON
+  sm.id = di.shipping_method_id

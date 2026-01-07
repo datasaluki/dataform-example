@@ -1,0 +1,35 @@
+config {
+    type: "table",
+    description: "The product details dimension",
+    tags: ["dimension", "product"],
+    columns: {
+      product_id: "The unique id of the product (hashed)",
+      product_name: "The product's name",
+      category: "The category the product belongs to",
+      sub_category: "The sub-category the product belongs to",
+      price: "The product's price"
+    }
+}
+
+js {
+    const {
+        surrogate_key
+    } = require("includes/helper.js")
+}
+
+SELECT
+  ${surrogate_key(["p.id"])} as product_id
+  , p.name as product_name
+  , c.name as category
+  , sc.name as sub_category
+  ,  price
+FROM
+  ${ref(dataform.projectConfig.vars.sourceSchema, "product")} p
+INNER JOIN
+  ${ref(dataform.projectConfig.vars.sourceSchema, "sub_category")} sc
+ON
+  sc.id = p.sub_category_id
+INNER JOIN
+  ${ref(dataform.projectConfig.vars.sourceSchema, "category")} c
+ON
+  c.id = sc.category_id
