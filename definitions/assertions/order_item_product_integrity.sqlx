@@ -2,7 +2,13 @@ config {
     type: "assertion"
 }
 
-select *
-from ${ref(dataform.projectConfig.defaultSchema, "fct_order_item")} f
-left join ${ref(dataform.projectConfig.defaultSchema, "dim_product")} dp on dp.product_id = f.product_id
-where dp.product_id is null
+SELECT
+  f.*
+FROM
+  ${ref(dataform.projectConfig.defaultSchema, "fct_order_item")} f
+LEFT JOIN
+  ${ref(dataform.projectConfig.defaultSchema, "dim_product")} dp
+ON
+  dp.product_id = f.product_id
+WHERE
+  dp.product_id IS null

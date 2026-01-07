@@ -1,6 +1,6 @@
 defaultProject: your-project
 defaultDataset: dataform_example_target
-defaultAssertionDataset: dataform_example_target
+defaultAssertionDataset: dataform_example_assertion
 dataformCoreVersion: 3.0.37
 vars:
     sourceSchema: dataform_example_source
