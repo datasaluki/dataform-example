@@ -7,6 +7,10 @@ config {
         city: "The city the customer lives in",
         country: "The country the customer lives in",
         src_customer_id: "The source systems unique ID for the customer"
+    },
+    assertions: {
+        uniqueKey: ["customer_id"],
+        nonNull: ["customer_id", "city", "country"]
     }
 }
 
