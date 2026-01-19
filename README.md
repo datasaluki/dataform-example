@@ -1,5 +1,5 @@
 # dataform-example
-This is an example dataform project that includes:
+This is an example dataform project I put together that includes:
 * Defining sources using javascript
 * Creating a simple dimensional model and an aggregate table using SQL
 * Creating a staging view with use of resolve to enable handling incremental loads into multiple target tables via one staging table
